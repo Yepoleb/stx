@@ -4,7 +4,8 @@
 #include <ctime>
 #include <vector>
 
-#include "bytearray.hpp"
+#include "stx/string.hpp"
+#include "stx/bytearray.hpp"
 
 
 

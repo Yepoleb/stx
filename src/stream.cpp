@@ -2,8 +2,9 @@
 #include <algorithm>
 #include <limits>
 
-#include "stream.hpp"
-#include "exception.hpp"
+#include "stx/stream.hpp"
+#include "stx/exception.hpp"
+#include "stx/algorithm.hpp"
 
 
 
@@ -19,7 +20,7 @@ int64_t BaseStream::tell()
     throw NotImplementedError();
 }
 
-void BaseStream::seek(int64_t offset, int origin)
+void BaseStream::seek([[maybe_unused]] int64_t offset, [[maybe_unused]] int origin)
 {
     throw NotImplementedError();
 }
@@ -75,10 +76,10 @@ ByteArray BaseStream::read(int64_t size)
 {
     ByteArray read_buffer(BUFSIZ);
     ByteArray data_buffer;
-    int64_t remaining = size != -1 ? size : std::numeric_limits<int64_t>::max();
+    int64_t remaining = size != -1 ? size : INT64_MAX;
 
     while (remaining) {
-        int64_t to_read = std::min(remaining, (int64_t)BUFSIZ);
+        int64_t to_read = stx::constrain_max(remaining, (int64_t)BUFSIZ);
         int64_t bytes_read = readInto1(read_buffer.data(), to_read);
 
         if (bytes_read == 0) {

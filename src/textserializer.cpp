@@ -6,9 +6,9 @@
 #include <iomanip>
 #include <cstring>
 
-#include "textserializer.hpp"
-#include "stream.hpp"
-#include "bytearray.hpp"
+#include "stx/textserializer.hpp"
+#include "stx/stream.hpp"
+#include "stx/bytearray.hpp"
 
 
 

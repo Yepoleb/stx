@@ -2,9 +2,9 @@
 #include <sstream>
 #include <utility>
 
-#include "socketserver.hpp"
-#include "socket.hpp"
-#include "logger.hpp"
+#include "stx/socketserver.hpp"
+#include "stx/socket.hpp"
+#include "stx/logger.hpp"
 
 
 
@@ -40,7 +40,7 @@ void SocketServer::listenForever()
             std::thread handler_thread(m_handler, this, peer);
             logger.trace(
                 "Starting new handler thread with id %",
-                handler_thread.get_id());
+                to_str_ss(handler_thread.get_id()));
             handler_thread.detach();
         } else {
             m_handler(this, peer);

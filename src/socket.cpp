@@ -6,8 +6,8 @@
 #include <sys/socket.h>
 #include <netinet/ip.h>
 
-#include "socket.hpp"
-#include "logger.hpp"
+#include "stx/socket.hpp"
+#include "stx/logger.hpp"
 
 
 

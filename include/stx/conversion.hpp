@@ -7,8 +7,10 @@
 #include <array>
 #include <map>
 #include <unordered_map>
+#include <set>
+#include <unordered_set>
 
-#include "bytearray.hpp"
+#include "stx/bytearray.hpp"
 
 //TODO: remove str() method from objects and overload to_str instead
 
@@ -51,9 +53,8 @@ std::string to_hex(const ByteArray& val);
 ByteArray to_bytes(const std::string& str);
 bool to_bool(const std::string& str);
 
-// Fallback stringifier
 template<typename T>
-std::string to_str(const T& arg)
+std::string to_str_ss(const T& arg)
 {
     std::stringstream ss;
     ss << arg;
@@ -72,7 +73,7 @@ std::string to_str_iter(const T& val)
         if (it != begin) {
             ss << ", ";
         }
-        ss << to_repr(*it);
+        ss << stx::to_repr(*it);
     }
     ss << ']';
 
@@ -112,6 +113,30 @@ std::string to_str(const std::array<T, N>& val)
     return to_str_iter(val);
 }
 
+template<typename T>
+std::string to_str(const std::set<T>& val)
+{
+    return to_str_iter(val);
+}
+
+template<typename T>
+std::string to_str(const std::multiset<T>& val)
+{
+    return to_str_iter(val);
+}
+
+template<typename T>
+std::string to_str(const std::unordered_set<T>& val)
+{
+    return to_str_iter(val);
+}
+
+template<typename T>
+std::string to_str(const std::unordered_multiset<T>& val)
+{
+    return to_str_iter(val);
+}
+
 template<typename T, typename U>
 std::string to_str(const std::map<T, U>& val)
 {
@@ -119,7 +144,19 @@ std::string to_str(const std::map<T, U>& val)
 }
 
 template<typename T, typename U>
+std::string to_str(const std::multimap<T, U>& val)
+{
+    return to_str_map(val);
+}
+
+template<typename T, typename U>
 std::string to_str(const std::unordered_map<T, U>& val)
+{
+    return to_str_map(val);
+}
+
+template<typename T, typename U>
+std::string to_str(const std::unordered_multimap<T, U>& val)
 {
     return to_str_map(val);
 }

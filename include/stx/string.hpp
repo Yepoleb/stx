@@ -4,10 +4,10 @@
 #include <ctime>
 #include <vector>
 
-#include "bytearray.hpp"
-#include "conversion.hpp"
-#include "textserializer.hpp"
-#include "memorystream.hpp"
+#include "stx/bytearray.hpp"
+#include "stx/conversion.hpp"
+#include "stx/textserializer.hpp"
+#include "stx/memorystream.hpp"
 
 
 
@@ -20,6 +20,23 @@ std::string format(Targs... args)
     stx::MemoryStream mems(buffer);
     stx::TextSerializer ser(mems);
     ser.printf(args...);
+    return stx::to_str(buffer);
+}
+
+template<typename IterableT>
+std::string join(const std::string& joiner, const IterableT& iterable)
+{
+    stx::ByteArray buffer;
+    stx::MemoryStream mems(buffer);
+    stx::TextSerializer ser(mems);
+
+    for (auto iter = iterable.cbegin(); iter != iterable.cend(); iter++) {
+        if (iter != iterable.cbegin()) {
+            ser.print(joiner);
+        }
+        ser.print(*iter);
+    }
+
     return stx::to_str(buffer);
 }
 

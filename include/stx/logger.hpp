@@ -2,9 +2,9 @@
 #include <memory>
 #include <string>
 
-#include "stream.hpp"
-#include "textserializer.hpp"
-#include "string.hpp"
+#include "stx/stream.hpp"
+#include "stx/textserializer.hpp"
+#include "stx/string.hpp"
 
 
 

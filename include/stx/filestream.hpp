@@ -3,8 +3,8 @@
 #include <string>
 #include <cstdio>
 
-#include "stream.hpp"
-#include "bytearray.hpp"
+#include "stx/stream.hpp"
+#include "stx/bytearray.hpp"
 
 
 
@@ -45,7 +45,7 @@ public:
     FileStream(FileStream&& other);
     FileStream& operator=(const FileStream& other) = delete;
     FileStream& operator=(FileStream&& other);
-    ~FileStream();
+    ~FileStream() override;
 
     void open(const char* path, const char* mode);
     void open(const std::string& path, const std::string& mode);

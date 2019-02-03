@@ -5,7 +5,7 @@
 
 #include <arpa/inet.h>
 
-#include "stream.hpp"
+#include "stx/stream.hpp"
 
 
 
@@ -38,7 +38,7 @@ public:
     Socket();
     Socket(int domain, int type, int protocol);
     Socket(int domain, int type, int protocol, socket_t handle);
-    ~Socket();
+    ~Socket() override;
     Socket(const Socket& other) = delete;
     Socket& operator=(Socket& other) = delete;
     Socket(Socket&& other);

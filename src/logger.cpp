@@ -3,7 +3,7 @@
 #include <mutex>
 #include <map>
 
-#include "logger.hpp"
+#include "stx/logger.hpp"
 
 
 namespace stx {

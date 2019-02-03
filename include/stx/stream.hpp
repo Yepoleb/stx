@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-#include "bytearray.hpp"
+#include "stx/bytearray.hpp"
 
 
 
@@ -10,6 +10,8 @@ namespace stx {
 class BaseStream
 {
 public:
+    virtual ~BaseStream() = default;
+
     virtual int64_t readInto1(char* buffer, int64_t size) = 0;
     virtual int64_t write1(const char* buffer, int64_t size) = 0;
 

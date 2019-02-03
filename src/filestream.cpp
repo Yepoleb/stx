@@ -3,8 +3,8 @@
 #include <system_error>
 #include <cstdio>
 
-#include "filestream.hpp"
-#include "stream.hpp"
+#include "stx/filestream.hpp"
+#include "stx/stream.hpp"
 
 
 
@@ -104,7 +104,7 @@ void FileStream::open(const std::string& path, const std::string& mode)
 
 void FileStream::close()
 {
-    if (!m_file && !m_isopen) return;
+    if (!m_file || !m_isopen) return;
     m_isopen = false;
     if (std::fclose(m_file)) {
         throw std::system_error(errno, std::system_category());

@@ -4,7 +4,7 @@
 
 #include "curl/curl.h"
 
-#include "curl.hpp"
+#include "stx/curl.hpp"
 
 
 

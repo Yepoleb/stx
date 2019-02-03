@@ -6,10 +6,10 @@
 
 #include "curl/curl.h"
 
-#include "request.hpp"
-#include "json.hpp"
-#include "curl.hpp"
-#include "memorystream.hpp"
+#include "stx/request.hpp"
+#include "stx/json.hpp"
+#include "stx/curl.hpp"
+#include "stx/memorystream.hpp"
 
 
 
@@ -22,7 +22,7 @@ RequestError::RequestError(std::string str) :
 }
 
 
-std::string http_errorstr(int status)
+static std::string http_errorstr(int status)
 {
     std::stringstream ss;
     ss << "HTTP error: " << status;
@@ -180,10 +180,10 @@ int HttpResponse::getStatus()
 {
     long status;
     m_curl->getinfo(CURLINFO_RESPONSE_CODE, &status);
-    return status;
+    return static_cast<int>(status);
 }
 
-int HttpResponse::ok()
+bool HttpResponse::ok()
 {
     return getStatus() < 400;
 }

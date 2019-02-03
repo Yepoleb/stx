@@ -2,9 +2,9 @@
 #include <cassert>
 #include <stdint.h>
 
-#include "stream.hpp"
-#include "filestream.hpp"
-#include "conversion.hpp"
+#include "stx/stream.hpp"
+#include "stx/filestream.hpp"
+#include "stx/conversion.hpp"
 
 
 
@@ -46,6 +46,11 @@ public:
     void print(T arg)
     {
         print(stx::to_str(arg));
+    }
+
+    void print()
+    {
+        
     }
 
     template<typename... Targs>

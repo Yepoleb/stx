@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "socket.hpp"
+#include "stx/socket.hpp"
 
 
 
@@ -21,7 +21,7 @@ public:
 
     void bind(NetworkAddress addr);
     void close();
-    void listenForever();
+    [[noreturn]] void listenForever();
 
     void setHandler(ConnectionHandler handler);
     ConnectionHandler getHandler() const;

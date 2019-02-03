@@ -1,5 +1,5 @@
 #pragma once
-#include "json_nlohmann.hpp"
+#include "stx/json_nlohmann.hpp"
 
 namespace stx {
     using namespace nlohmann;

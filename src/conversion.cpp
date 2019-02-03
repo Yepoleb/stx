@@ -2,11 +2,11 @@
 #include <sstream>
 #include <iomanip>
 
-#include "conversion.hpp"
-#include "bytearray.hpp"
+#include "stx/conversion.hpp"
+#include "stx/bytearray.hpp"
 
 
-
+#include <iostream>
 namespace stx {
 
 std::string to_str(std::string val)
@@ -183,9 +183,9 @@ std::string to_repr(const ByteArray& val)
 std::string to_hex(const ByteArray& val)
 {
     std::stringstream ss;
-    ss << std::hex << std::setfill('0') << std::setw(2) << std::uppercase;
+    ss << std::hex << std::setfill('0') << std::uppercase;
     for (char c : val) {
-        ss << (int)(unsigned char)c;
+        ss << std::setw(2) << (int)(unsigned char)c;
     }
     return ss.str();
 }

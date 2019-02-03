@@ -5,9 +5,9 @@
 #include <stdexcept>
 #include <utility>
 
-#include "bytearray.hpp"
-#include "json.hpp"
-#include "url.hpp"
+#include "stx/bytearray.hpp"
+#include "stx/json.hpp"
+#include "stx/url.hpp"
 
 
 
@@ -75,7 +75,7 @@ public:
     ByteArray& getDataRef();
     stx::json getJson();
     int getStatus();
-    int ok();
+    bool ok();
     void throwStatus();
 
 private:
