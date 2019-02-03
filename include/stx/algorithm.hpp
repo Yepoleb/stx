@@ -107,4 +107,27 @@ bool less_equal_iter(const IterableT& iterable1, const IterableT& iterable2)
         iterable1, iterable2, std::less_equal<value_type>());
 }
 
+template <typename IterableT, typename T>
+bool contains_impl_(const IterableT& iterable, const T& value)
+{
+    for (const auto& iter_val : iterable) {
+        if (iter_val == value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+template <typename IterableT, typename T>
+bool contains(const IterableT& iterable, const T& value)
+{
+    return contains_impl_(iterable, value);
+}
+
+template <typename T1, typename T2>
+bool contains(const std::initializer_list<T1>& list, const T2& value)
+{
+    return contains_impl_(list, value);
+}
+
 }
