@@ -39,6 +39,12 @@ public:
         stream.write(reinterpret_cast<char*>(&value), sizeof(T));
     }
 
+    int64_t readS64NA();
+    int32_t readS32NA();
+    int16_t readS16NA();
+    uint64_t readU64NA();
+    uint32_t readU32NA();
+    uint16_t readU16NA();
     int64_t readS64BE();
     int32_t readS32BE();
     int16_t readS16BE();
@@ -59,6 +65,12 @@ public:
     float readFloat();
     double readDouble();
 
+    void writeS64NA(int64_t value);
+    void writeS32NA(int32_t value);
+    void writeS16NA(int16_t value);
+    void writeU64NA(uint64_t value);
+    void writeU32NA(uint32_t value);
+    void writeU16NA(uint16_t value);
     void writeS64BE(int64_t value);
     void writeS32BE(int32_t value);
     void writeS16BE(int16_t value);

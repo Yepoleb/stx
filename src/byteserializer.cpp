@@ -101,6 +101,36 @@ void ByteSerializer::writeCString(const std::string& str)
 
 
 
+int64_t ByteSerializer::readS64NA()
+{
+    return read_generic<int64_t>();
+}
+
+int32_t ByteSerializer::readS32NA()
+{
+    return read_generic<int32_t>();
+}
+
+int16_t ByteSerializer::readS16NA()
+{
+    return read_generic<int16_t>();
+}
+
+uint64_t ByteSerializer::readU64NA()
+{
+    return read_generic<uint64_t>();
+}
+
+uint32_t ByteSerializer::readU32NA()
+{
+    return read_generic<uint32_t>();
+}
+
+uint16_t ByteSerializer::readU16NA()
+{
+    return read_generic<uint16_t>();
+}
+
 int64_t ByteSerializer::readS64BE()
 {
     return stx::swap_be_u64(read_generic<int64_t>());
@@ -197,6 +227,36 @@ double ByteSerializer::readDouble()
 }
 
 
+
+void ByteSerializer::writeS64NA(int64_t value)
+{
+    write_generic<int64_t>(value);
+}
+
+void ByteSerializer::writeS32NA(int32_t value)
+{
+    write_generic<int32_t>(value);
+}
+
+void ByteSerializer::writeS16NA(int16_t value)
+{
+    write_generic<int16_t>(value);
+}
+
+void ByteSerializer::writeU64NA(uint64_t value)
+{
+    write_generic<uint64_t>(value);
+}
+
+void ByteSerializer::writeU32NA(uint32_t value)
+{
+    write_generic<uint32_t>(value);
+}
+
+void ByteSerializer::writeU16NA(uint16_t value)
+{
+    write_generic<uint16_t>(value);
+}
 
 void ByteSerializer::writeS64BE(int64_t value)
 {
