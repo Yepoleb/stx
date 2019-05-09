@@ -16,14 +16,14 @@ namespace stx {
 
 void TextSerializer::write(const std::string& str)
 {
-    assert(stream);
-    stream->write(str.data(), str.size());
+    assert(m_stream != nullptr);
+    m_stream->write(str.data(), str.size());
 }
 
 void TextSerializer::write(const char* str)
 {
-    assert(stream);
-    stream->write(str, std::strlen(str));
+    assert(m_stream != nullptr);
+    m_stream->write(str, std::strlen(str));
 }
 
 void TextSerializer::print(const std::string& str)
@@ -38,14 +38,14 @@ void TextSerializer::print(const char* str)
 
 std::string TextSerializer::read(int64_t size)
 {
-    assert(stream);
-    ByteArray ba = stream->read(size);
+    assert(m_stream != nullptr);
+    ByteArray ba = m_stream->read(size);
     return stx::to_str(ba);
 }
 
 std::string TextSerializer::readUntil(char sep, int64_t size)
 {
-    assert(stream);
+    assert(m_stream != nullptr);
 
     if (size < 0) {
         size = std::numeric_limits<int64_t>::max();
@@ -54,7 +54,7 @@ std::string TextSerializer::readUntil(char sep, int64_t size)
     ByteArray ba;
     while ((int64_t)ba.size() < size) {
         char c;
-        int64_t size_read = stream->readInto1(&c, 1);
+        int64_t size_read = m_stream->readInto1(&c, 1);
         if (!size_read) {
             break;
         }
@@ -70,13 +70,6 @@ std::string TextSerializer::readUntil(char sep, int64_t size)
 std::string TextSerializer::readLine(int64_t size)
 {
     return readUntil('\n', size);
-}
-
-
-
-BaseStream* TextSerializer::getStream()
-{
-    return stream;
 }
 
 }

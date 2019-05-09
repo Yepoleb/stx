@@ -1,3 +1,11 @@
+#pragma once
+#include <map>
+#include <unordered_map>
+#include <string>
+#include <stringstream>
+
+
+
 namespace stx {
 
 template<typename T>
@@ -335,5 +343,62 @@ ConstMapValueIterator<T> values(const T& m)
 {
     return ConstMapValueIterator<T>(m);
 }
+
+
+template<typename T>
+std::string to_str_map(const T& val)
+{
+    std::stringstream ss;
+    ss << '{';
+    auto begin = val.cbegin();
+    auto end = val.cend();
+    for (auto it = begin; it != end; ++it) {
+        if (it != begin) {
+            ss << ", ";
+        }
+        const auto& map_pair = *it;
+        ss << to_repr(map_pair.first) << ": "
+            << to_repr(map_pair.second);
+    }
+    ss << '}';
+
+    return ss.str();
+}
+
+template<typename Key, typename T, typename Compare, typename Allocator>
+struct StringConverter
+{
+    std::string operator()(const std::map<Key, T, Compare, Allocator>& val)
+    {
+        return to_str_map(val);
+    }
+};
+
+template<typename Key, typename T, typename Compare, typename Allocator>
+struct StringConverter
+{
+    std::string operator()(const std::multimap<Key, T, Compare, Allocator>& val)
+    {
+        return to_str_map(val);
+    }
+};
+
+template<typename Key, typename T, typename Hash, typename KeyEqual, typename Allocator>
+struct StringConverter
+{
+    std::string operator()(const std::unordered_map<Key, T, Hash, KeyEqual, Allocator>& val)
+    {
+        return to_str_map(val);
+    }
+};
+
+template<typename Key, typename T, typename Hash, typename KeyEqual, typename Allocator>
+struct StringConverter
+{
+    std::string operator()(const std::unordered_multimap<Key, T, Hash, KeyEqual, Allocator>& val)
+    {
+        return to_str_map(val);
+    }
+};
 
 }

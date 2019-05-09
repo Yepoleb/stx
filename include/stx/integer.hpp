@@ -94,7 +94,7 @@ inline bool is_little_endian()
 
 constexpr uint16_t byteswap_u16(uint16_t value)
 {
-    return (value >> 8) | (value << 8);
+    return static_cast<uint16_t>((value >> 8) | (value << 8));
 }
 
 constexpr uint32_t byteswap_u32(uint32_t value)
@@ -183,12 +183,12 @@ constexpr uint32_t bitmask_u32(size_t bits)
 
 constexpr uint16_t bitmask_u16(size_t bits)
 {
-    return (~0_u16 >> (16 - stx::constrain_max(bits, 16_size)));
+    return (uint16_t)(~0_u16 >> (16 - stx::constrain_max(bits, 16_size)));
 }
 
 constexpr uint8_t bitmask_u8(size_t bits)
 {
-    return (~0_u8 >> (8 - stx::constrain_max(bits, 8_size)));
+    return (uint8_t)(~0_u8 >> (8 - stx::constrain_max(bits, 8_size)));
 }
 
 
@@ -204,12 +204,12 @@ constexpr uint32_t reverse_bitmask_u32(size_t bits)
 
 constexpr uint16_t reverse_bitmask_u16(size_t bits)
 {
-    return (~0_u16 << (16 - stx::constrain_max(bits, 16_size)));
+    return (uint16_t)(~0_u16 << (16 - stx::constrain_max(bits, 16_size)));
 }
 
 constexpr uint8_t reverse_bitmask_u8(size_t bits)
 {
-    return (~0_u8 << (8 - stx::constrain_max(bits, 8_size)));
+    return (uint8_t)(~0_u8 << (8 - stx::constrain_max(bits, 8_size)));
 }
 
 }

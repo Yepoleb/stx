@@ -4,16 +4,19 @@
 
 #include "stx/bytearray.hpp"
 #include "stx/stream.hpp"
+#include "stx/serializer.hpp"
 
 
 
 namespace stx {
 
-class BaseStream;
-
-class ByteSerializer {
+class ByteSerializer : public BaseSerializer
+{
 public:
-    explicit ByteSerializer(stx::BaseStream& stream_);
+    constexpr ByteSerializer() : BaseSerializer() {}
+    constexpr ByteSerializer(BaseStream* stream) : BaseSerializer(stream) {}
+    constexpr ByteSerializer(BaseStream& stream) : BaseSerializer(&stream) {}
+
     ByteArray read(int64_t size);
     int64_t write(const ByteArray& buffer);
     void ignore(int64_t size);
@@ -29,14 +32,14 @@ public:
     T read_generic()
     {
         T value;
-        stream.readInto(reinterpret_cast<char*>(&value), sizeof(T));
+        m_stream->readInto(reinterpret_cast<char*>(&value), sizeof(T));
         return value;
     }
 
     template<typename T>
     void write_generic(T value)
     {
-        stream.write(reinterpret_cast<char*>(&value), sizeof(T));
+        m_stream->write(reinterpret_cast<char*>(&value), sizeof(T));
     }
 
     int64_t readS64NA();
@@ -90,9 +93,6 @@ public:
     void writeBool(bool value);
     void writeFloat(float value);
     void writeDouble(double value);
-
-protected:
-    stx::BaseStream& stream;
 };
 
 }

@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "stx/stream.hpp"
+#include "stx/serializer.hpp"
 #include "stx/filestream.hpp"
 #include "stx/conversion.hpp"
 
@@ -10,20 +11,12 @@
 
 namespace stx {
 
-class TextSerializer
+class TextSerializer : public BaseSerializer
 {
 public:
-    constexpr TextSerializer() :
-        stream(nullptr)
-    {
-
-    }
-
-    constexpr TextSerializer(BaseStream& stream_) :
-        stream(&stream_)
-    {
-
-    }
+    constexpr TextSerializer() : BaseSerializer() {}
+    constexpr TextSerializer(BaseStream* stream) : BaseSerializer(stream) {}
+    constexpr TextSerializer(BaseStream& stream) : BaseSerializer(&stream) {}
 
     void write(const std::string& str);
     void write(const char* str);
@@ -32,8 +25,6 @@ public:
     std::string read(int64_t size = -1);
     std::string readUntil(char sep = '\n', int64_t size = -1);
     std::string readLine(int64_t size = -1);
-
-    BaseStream* getStream();
 
     template<typename T, typename... Targs>
     void print(T first, Targs... args)
@@ -50,7 +41,7 @@ public:
 
     void print()
     {
-        
+
     }
 
     template<typename... Targs>
@@ -100,9 +91,6 @@ private:
         print(middle);
         print_space(args...);
     }
-
-protected:
-    BaseStream* stream;
 };
 
 

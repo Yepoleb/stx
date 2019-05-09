@@ -16,32 +16,28 @@ static const char PAD_ZEROS[PAD_CHUNKSIZE] = {0};
 
 
 
-ByteSerializer::ByteSerializer(stx::BaseStream& stream_) :
-    stream(stream_)
-{
-
-}
 
 ByteArray ByteSerializer::read(int64_t size)
 {
-    return stream.read(size);
+    assert(m_stream != nullptr);
+    return m_stream->read(size);
 }
 
 int64_t ByteSerializer::write(const ByteArray& buffer)
 {
-    return stream.write(buffer);
+    assert(m_stream != nullptr);
+    return m_stream->write(buffer);
 }
-
 
 
 void ByteSerializer::ignore(int64_t size)
 {
-    stream.seek(size, SEEK_CUR);
+    seek(size, SEEK_CUR);
 }
 
 void ByteSerializer::align(int64_t alignment)
 {
-    int64_t current_pos = stream.tell();
+    int64_t current_pos = tell();
     int64_t to_align = current_pos % alignment;
     if (to_align > 0) {
         ignore(to_align);
@@ -50,19 +46,20 @@ void ByteSerializer::align(int64_t alignment)
 
 void ByteSerializer::pad(int64_t size)
 {
+    assert(m_stream != nullptr);
     while (size >= PAD_CHUNKSIZE) {
-        stream.write(PAD_ZEROS, PAD_CHUNKSIZE);
+        m_stream->write(PAD_ZEROS, PAD_CHUNKSIZE);
         size -= PAD_CHUNKSIZE;
     }
     if (size) {
         assert(size < PAD_CHUNKSIZE);
-        stream.write(PAD_ZEROS, size);
+        m_stream->write(PAD_ZEROS, size);
     }
 }
 
 void ByteSerializer::padAlign(int64_t alignment)
 {
-    std::streampos current_pos = stream.tell();
+    std::streampos current_pos = tell();
     std::streamoff to_align = current_pos % alignment;
     pad(to_align);
 }
@@ -71,8 +68,10 @@ void ByteSerializer::padAlign(int64_t alignment)
 
 std::string ByteSerializer::readString(int64_t n)
 {
+    assert(m_stream != nullptr);
     std::string str(n, 0);
-    stream.readInto(str.data(), n);
+    int64_t bytes_read = m_stream->readInto(str.data(), n);
+    str.resize(bytes_read);
     return str;
 }
 
@@ -91,12 +90,14 @@ std::string ByteSerializer::readCString(char delim)
 
 void ByteSerializer::writeString(const std::string& str)
 {
-    stream.write(str.data(), str.size());
+    assert(m_stream != nullptr);
+    m_stream->write(str.data(), str.size());
 }
 
 void ByteSerializer::writeCString(const std::string& str)
 {
-    stream.write(str.c_str(), str.size() + 1);
+    assert(m_stream != nullptr);
+    m_stream->write(str.c_str(), str.size() + 1);
 }
 
 

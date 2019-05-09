@@ -5,53 +5,42 @@
 #include <sstream>
 #include <vector>
 #include <array>
-#include <map>
-#include <unordered_map>
-#include <set>
-#include <unordered_set>
 
 #include "stx/bytearray.hpp"
-
-//TODO: remove str() method from objects and overload to_str instead
 
 
 
 namespace stx {
 
-std::string to_str(std::string val);
-std::string to_str(const char* val);
-std::string to_str(int64_t val);
-std::string to_str(int32_t val);
-std::string to_str(int16_t val);
-std::string to_str(uint64_t val);
-std::string to_str(uint32_t val);
-std::string to_str(uint16_t val);
-std::string to_str(float val);
-std::string to_str(double val);
-std::string to_str(long double val);
-std::string to_str(char val);
-std::string to_str(unsigned char val);
-std::string to_str(bool val);
-std::string to_str(const ByteArray& val);
+template <typename T>
+struct StringConverter
+{
+    std::string operator()(const T& val)
+    {
+        return val.str();
+    }
+};
 
-std::string to_repr(const std::string& val);
-std::string to_repr(int64_t val);
-std::string to_repr(int32_t val);
-std::string to_repr(int16_t val);
-std::string to_repr(uint64_t val);
-std::string to_repr(uint32_t val);
-std::string to_repr(uint16_t val);
-std::string to_repr(float val);
-std::string to_repr(double val);
-std::string to_repr(long double val);
-std::string to_repr(char val);
-std::string to_repr(unsigned char val);
-std::string to_repr(bool val);
-std::string to_repr(const ByteArray& val);
+template <typename T>
+std::string to_str(const T& val)
+{
+    return StringConverter<T>()(val);
+}
 
-std::string to_hex(const ByteArray& val);
-ByteArray to_bytes(const std::string& str);
-bool to_bool(const std::string& str);
+template <typename T>
+struct ReprConverter
+{
+    std::string operator()(const T& val)
+    {
+        return val.repr();
+    }
+};
+
+template <typename T>
+std::string to_repr(const T& val)
+{
+    return ReprConverter<T>()(val);
+}
 
 template<typename T>
 std::string to_str_ss(const T& arg)
@@ -80,85 +69,208 @@ std::string to_str_iter(const T& val)
     return ss.str();
 }
 
-template<typename T>
-std::string to_str_map(const T& val)
+namespace detail {
+    std::string to_repr(const std::string& val);
+    std::string to_repr(const ByteArray& val);
+    std::string to_hex(const ByteArray& val);
+}
+
+template <typename T>
+struct StringConverterNumber
 {
-    std::stringstream ss;
-    ss << '{';
-    auto begin = val.cbegin();
-    auto end = val.cend();
-    for (auto it = begin; it != end; ++it) {
-        if (it != begin) {
-            ss << ", ";
-        }
-        const auto& map_pair = *it;
-        ss << to_repr(map_pair.first) << ": "
-            << to_repr(map_pair.second);
+    std::string operator()(T val)
+    {
+        return std::to_string(val);
     }
-    ss << '}';
+};
 
-    return ss.str();
-}
-
-
-template<typename T>
-std::string to_str(const std::vector<T>& val)
+template <>
+struct StringConverter<std::string>
 {
-    return to_str_iter(val);
-}
+    std::string operator()(const std::string& val)
+    {
+        return val;
+    }
+};
+
+template <>
+struct StringConverter<const char*>
+{
+    std::string operator()(const char* val)
+    {
+        return val;
+    }
+};
+
+template <>
+struct StringConverter<int64_t> : public StringConverterNumber<int64_t> {};
+
+template <>
+struct StringConverter<int32_t> : public StringConverterNumber<int32_t> {};
+
+template <>
+struct StringConverter<int16_t> : public StringConverterNumber<int16_t> {};
+
+template <>
+struct StringConverter<uint64_t> : public StringConverterNumber<uint64_t> {};
+
+template <>
+struct StringConverter<uint32_t> : public StringConverterNumber<uint32_t> {};
+
+template <>
+struct StringConverter<uint16_t> : public StringConverterNumber<uint16_t> {};
+
+template <>
+struct StringConverter<float> : public StringConverterNumber<float> {};
+
+template <>
+struct StringConverter<double> : public StringConverterNumber<double> {};
+
+template <>
+struct StringConverter<long double> : public StringConverterNumber<long double> {};
+
+template <>
+struct StringConverter<char>
+{
+    std::string operator()(char val)
+    {
+        return std::string(1, val);
+    }
+};
+
+template <>
+struct StringConverter<unsigned char>
+{
+    std::string operator()(unsigned char val)
+    {
+        return std::string(1, val);
+    }
+};
+
+template <>
+struct StringConverter<bool>
+{
+    std::string operator()(bool val)
+    {
+        return val ? "true" : "false";
+    }
+};
+
+template <>
+struct StringConverter<ByteArray>
+{
+    std::string operator()(const ByteArray& val)
+    {
+        return std::string(val.data(), val.size());
+    }
+};
+
+template <typename T, typename Allocator>
+struct StringConverter<std::vector<T, Allocator>>
+{
+    std::string operator()(const std::vector<T, Allocator>& val)
+    {
+        return to_str_iter(val);
+    }
+};
 
 template<typename T, size_t N>
-std::string to_str(const std::array<T, N>& val)
+struct StringConverter<std::array<T, N>>
 {
-    return to_str_iter(val);
-}
+    std::string operator()(const std::array<T, N>& val)
+    {
+        return to_str_iter(val);
+    }
+};
 
-template<typename T>
-std::string to_str(const std::set<T>& val)
-{
-    return to_str_iter(val);
-}
 
-template<typename T>
-std::string to_str(const std::multiset<T>& val)
-{
-    return to_str_iter(val);
-}
 
-template<typename T>
-std::string to_str(const std::unordered_set<T>& val)
+template <>
+struct ReprConverter<std::string>
 {
-    return to_str_iter(val);
-}
+    std::string operator()(const std::string& val)
+    {
+        return detail::to_repr(val);
+    }
+};
 
-template<typename T>
-std::string to_str(const std::unordered_multiset<T>& val)
+template <>
+struct ReprConverter<const char*>
 {
-    return to_str_iter(val);
-}
+    std::string operator()(const char* val)
+    {
+        return detail::to_repr(std::string(val));
+    }
+};
 
-template<typename T, typename U>
-std::string to_str(const std::map<T, U>& val)
-{
-    return to_str_map(val);
-}
+template <>
+struct ReprConverter<int64_t> : public StringConverterNumber<int64_t> {};
 
-template<typename T, typename U>
-std::string to_str(const std::multimap<T, U>& val)
-{
-    return to_str_map(val);
-}
+template <>
+struct ReprConverter<int32_t> : public StringConverterNumber<int32_t> {};
 
-template<typename T, typename U>
-std::string to_str(const std::unordered_map<T, U>& val)
-{
-    return to_str_map(val);
-}
+template <>
+struct ReprConverter<int16_t> : public StringConverterNumber<int16_t> {};
 
-template<typename T, typename U>
-std::string to_str(const std::unordered_multimap<T, U>& val)
+template <>
+struct ReprConverter<uint64_t> : public StringConverterNumber<uint64_t> {};
+
+template <>
+struct ReprConverter<uint32_t> : public StringConverterNumber<uint32_t> {};
+
+template <>
+struct ReprConverter<uint16_t> : public StringConverterNumber<uint16_t> {};
+
+template <>
+struct ReprConverter<float> : public StringConverterNumber<float> {};
+
+template <>
+struct ReprConverter<double> : public StringConverterNumber<double> {};
+
+template <>
+struct ReprConverter<long double> : public StringConverterNumber<long double> {};
+
+template <>
+struct ReprConverter<char>
 {
-    return to_str_map(val);
-}
+    std::string operator()(char val)
+    {
+        return "'" + std::string(1, val) + "'";
+    }
+};
+
+template <>
+struct ReprConverter<unsigned char>
+{
+    std::string operator()(unsigned char val)
+    {
+        return "'" + std::string(1, val) + "'";
+    }
+};
+
+template <>
+struct ReprConverter<bool>
+{
+    std::string operator()(bool val)
+    {
+        return val ? "true" : "false";
+    }
+};
+
+template <>
+struct ReprConverter<ByteArray>
+{
+    std::string operator()(const ByteArray& val)
+    {
+        return detail::to_repr(val);
+    }
+};
+
+// TODO: Make these more generic
+
+std::string to_hex(char val);
+std::string to_hex(const ByteArray& val);
+ByteArray to_bytes(const std::string& str);
+bool to_bool(const std::string& str);
 
 }
