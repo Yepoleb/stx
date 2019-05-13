@@ -28,8 +28,8 @@ public:
     std::FILE* getFilePointer();
     void setFilePointer(std::FILE* fp);
 
-    int64_t readInto1(char* buffer, int64_t size) override;
-    int64_t write1(const char* buffer, int64_t size) override;
+    int64_t readInto1(void* buffer, int64_t size) override;
+    int64_t write1(const void* buffer, int64_t size) override;
     void flush() override;
 
 protected:

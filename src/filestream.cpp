@@ -20,7 +20,7 @@ void RawFileStream::setFilePointer(std::FILE* fp)
     m_file = fp;
 }
 
-int64_t RawFileStream::readInto1(char* buffer, int64_t size)
+int64_t RawFileStream::readInto1(void* buffer, int64_t size)
 {
     assert(m_file);
     int64_t bytes_read = std::fread(buffer, 1, size, m_file);
@@ -30,7 +30,7 @@ int64_t RawFileStream::readInto1(char* buffer, int64_t size)
     return bytes_read;
 }
 
-int64_t RawFileStream::write1(const char* buffer, int64_t size)
+int64_t RawFileStream::write1(const void* buffer, int64_t size)
 {
     assert(m_file);
     int64_t bytes_written = std::fwrite(buffer, 1, size, m_file);

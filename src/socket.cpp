@@ -160,7 +160,7 @@ bool Socket::isValid() {
     return m_handle != -1;
 }
 
-int64_t Socket::readInto1(char* buffer, int64_t size)
+int64_t Socket::readInto1(void* buffer, int64_t size)
 {
     int64_t bytes_read = ::recv(m_handle, buffer, size, MSG_NOSIGNAL);
     if (bytes_read == -1) {
@@ -169,7 +169,7 @@ int64_t Socket::readInto1(char* buffer, int64_t size)
     return bytes_read;
 }
 
-int64_t Socket::write1(const char* buffer, int64_t size)
+int64_t Socket::write1(const void* buffer, int64_t size)
 {
     int64_t bytes_written = ::send(m_handle, buffer, size, MSG_NOSIGNAL);
     if (bytes_written == -1) {

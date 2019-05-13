@@ -24,7 +24,7 @@ MemoryStream::MemoryStream(ByteArray& buffer)
     m_pos = 0;
 }
 
-int64_t MemoryStream::readInto1(char* buffer, int64_t size)
+int64_t MemoryStream::readInto1(void* buffer, int64_t size)
 {
     int64_t remaining = m_buffer->size() - m_pos;
     int64_t maxread = stx::constrain_max(remaining, size);
@@ -35,7 +35,7 @@ int64_t MemoryStream::readInto1(char* buffer, int64_t size)
     return maxread;
 }
 
-int64_t MemoryStream::write1(const char* buffer, int64_t size)
+int64_t MemoryStream::write1(const void* buffer, int64_t size)
 {
     int64_t bufsize_req = m_pos + size;
     if (bufsize_req > (int64_t)m_buffer->size()) {
@@ -88,14 +88,14 @@ ConstMemoryStream::ConstMemoryStream(const ByteArray& buffer)
     m_pos = 0;
 }
 
-ConstMemoryStream::ConstMemoryStream(const char* buffer, int64_t size)
+ConstMemoryStream::ConstMemoryStream(const void* buffer, int64_t size)
 {
-    m_buffer = buffer;
+    m_buffer = reinterpret_cast<const char*>(buffer);
     m_size = size;
     m_pos = 0;
 }
 
-int64_t ConstMemoryStream::readInto1(char* buffer, int64_t size)
+int64_t ConstMemoryStream::readInto1(void* buffer, int64_t size)
 {
     int64_t remaining = m_size - m_pos;
     int64_t maxread = stx::constrain_max(remaining, size);
@@ -107,7 +107,7 @@ int64_t ConstMemoryStream::readInto1(char* buffer, int64_t size)
 }
 
 int64_t ConstMemoryStream::write1(
-    [[maybe_unused]] const char* buffer, [[maybe_unused]] int64_t size)
+    [[maybe_unused]] const void* buffer, [[maybe_unused]] int64_t size)
 {
     throw NotImplementedError();
 }

@@ -14,8 +14,8 @@ public:
     MemoryStream();
     MemoryStream(ByteArray& buffer);
 
-    int64_t readInto1(char* buffer, int64_t size) override;
-    int64_t write1(const char* buffer, int64_t size) override;
+    int64_t readInto1(void* buffer, int64_t size) override;
+    int64_t write1(const void* buffer, int64_t size) override;
 
     int64_t tell() override;
     void seek(int64_t offset, int origin) override;
@@ -34,10 +34,10 @@ class ConstMemoryStream : public BaseStream
 public:
     ConstMemoryStream();
     ConstMemoryStream(const ByteArray& buffer);
-    ConstMemoryStream(const char* buffer, int64_t size);
+    ConstMemoryStream(const void* buffer, int64_t size);
 
-    int64_t readInto1(char* buffer, int64_t size) override;
-    int64_t write1(const char* buffer, int64_t size) override;
+    int64_t readInto1(void* buffer, int64_t size) override;
+    int64_t write1(const void* buffer, int64_t size) override;
 
     int64_t tell() override;
     void seek(int64_t offset, int origin) override;

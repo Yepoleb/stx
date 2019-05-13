@@ -30,13 +30,14 @@ bool BaseStream::seekable() const
     return false;
 }
 
-int64_t BaseStream::readInto(char* buffer, int64_t size)
+int64_t BaseStream::readInto(void* buffer, int64_t size)
 {
     int64_t pos = 0;
 
     while (pos < size) {
         int64_t to_read = size - pos;
-        int64_t bytes_read = readInto1(buffer + pos, to_read);
+        int64_t bytes_read = readInto1(
+            reinterpret_cast<char*>(buffer) + pos, to_read);
 
         if (bytes_read == 0) {
             break;
@@ -47,13 +48,14 @@ int64_t BaseStream::readInto(char* buffer, int64_t size)
     return pos;
 }
 
-int64_t BaseStream::write(const char* buffer, int64_t size)
+int64_t BaseStream::write(const void* buffer, int64_t size)
 {
     int64_t pos = 0;
 
     while (pos < size) {
         int64_t to_write = size - pos;
-        int64_t bytes_written = write1(buffer + pos, to_write);
+        int64_t bytes_written = write1(
+            reinterpret_cast<const char*>(buffer) + pos, to_write);
 
         if (bytes_written == 0) {
             break;

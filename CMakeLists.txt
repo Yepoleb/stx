@@ -14,6 +14,7 @@ set(SOURCES
     src/memorystream.cpp
     src/path.cpp
     src/request.cpp
+    src/serializer.cpp
     src/socket.cpp
     src/socketserver.cpp
     src/stream.cpp
